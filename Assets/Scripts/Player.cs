@@ -1,9 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private Vector3 screenBounds;
+
     //how to define a variable
     //1. access modifier: public or private
     //2. data type: int, float, bool, string
@@ -19,8 +19,15 @@ public class Player : MonoBehaviour
 
     public GameObject bulletPrefab;
 
-    void Start()
-    {
+    public float Xmin { get; private set; }
+    public float Xmax { get; private set; }
+    public float Ymin { get; private set; }
+    public float Ymax { get; private set; }
+    public static object Transform { get; internal set; }
+
+    void Start() {
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+    
         playerSpeed = 6f;
         //This function is called at the start of the game
         
@@ -33,7 +40,6 @@ public class Player : MonoBehaviour
         Shooting();
 
     }
-
     void Shooting()
     {
         //if the player presses the SPACE key, create a projectile
@@ -53,7 +59,7 @@ public class Player : MonoBehaviour
         //Player leaves the screen horizontally
         if(transform.position.x > horizontalScreenLimit || transform.position.x <= -horizontalScreenLimit)
         {
-            transform.position = new Vector3(transform.position.x * -1, transform.position.y, 0);
+            transform.position = new Vector3(transform.position.x * 0, transform.position.y, 0);
         }
         //Player leaves the screen vertically
         if(transform.position.y > verticalScreenLimit || transform.position.y <= -verticalScreenLimit)
@@ -62,4 +68,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void PlayerXRange()
+    {
+
+        var pos = transform.position;
+        pos.x = Mathf.Clamp(transform.position.x, -7, 7);
+        transform.position = pos;
+    }
 }
